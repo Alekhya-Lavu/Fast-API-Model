@@ -1,9 +1,0 @@
-numpy==1.16.6
-pydantic==0.30
-uvicorn==0.8.6
-lightgbm==2.2.1
-fastapi==0.35.0
-skl2onnx==1.6.1
-requests
-pandas
-onnxruntime
