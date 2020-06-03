@@ -7,15 +7,9 @@ from skl2onnx.common.data_types import FloatTensorType
 import numpy
 import onnxruntime as rt
 
-
-
 # Server
 import uvicorn   # provides support for http requests.
 from fastapi import FastAPI # an API that the end-user can access.
-
-# Modeling
-#from sklearn.ensemble import RandomForestRegressor
-#from sklearn.preprocessing import StandardScaler
 
 # intialising the fastapi.
 app = FastAPI()
@@ -23,16 +17,11 @@ app = FastAPI()
 with open('data/features.pickle','rb') as f:
     feature = pickle.load(f)
     print("features:",feature)
-
-
 session = rt.InferenceSession("data/house.onnx")
 first_input_name = session.get_inputs()[0].name
-print("input:",first_input_name)
 first_output_name = session.get_outputs()[0].name
-print("output:",first_output_name)
 
 # Creating objects i.e feature names
-
 class Data(BaseModel):
     CRIM : float
     ZN : float
@@ -48,13 +37,11 @@ class Data(BaseModel):
     B : float
     LSTAT : float
     
-
 @app.post("/predict")
 def predict(data:Data):
     try:
         # Extract data in correct order
         data_dict = data.dict()
-        print("dictionary:",data_dict)
         to_predict = [data_dict[feature] for feature in feature]
         
         # dict to array
@@ -62,9 +49,6 @@ def predict(data:Data):
         to_predict = numpy.array(to_predict).reshape(1,-1)
         print("array:",to_predict)
         pred_onx = session.run([], {first_input_name: to_predict.astype(numpy.float32)})[0]
-        
-        print("prediction",pred_onx)
-        
         return {"prediction":float(pred_onx[0])}
     except:
         return {"prediction": "error"}
