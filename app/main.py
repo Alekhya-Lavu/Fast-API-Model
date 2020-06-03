@@ -52,22 +52,3 @@ def predict(data:Data):
         return {"prediction":float(pred_onx[0])}
     except:
         return {"prediction": "error"}
-    
-     
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
